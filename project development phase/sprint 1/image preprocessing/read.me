@@ -1,0 +1,290 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ynUOT9Yc6fQk",
+        "outputId": "c082f81f-81a1-4960-e27c-89302f816967"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mounted at /content/drive\n"
+          ]
+        }
+      ],
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "NhP7V93wMVho",
+        "outputId": "0ce81b2a-e42b-44ee-bf11-1927a7ba4124"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\u001b[0m\u001b[01;34mdrive\u001b[0m/  \u001b[01;34msample_data\u001b[0m/\n"
+          ]
+        }
+      ],
+      "source": [
+        "ls"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 5,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_VuPfwOuQYAm",
+        "outputId": "d047aafc-a3a1-4c1a-a63b-30ac8946eead"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "/content/drive/.shortcut-targets-by-id/1LL5lvl6AsdVwW9LWVu_GXEUCoV7jYm-c/Dataset\n"
+          ]
+        }
+      ],
+      "source": [
+        "cd//content/drive/MyDrive/Colab Notebooks/Dataset\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 6,
+      "metadata": {
+        "id": "kdGnCU-FQz8C",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "1cb8d0f4-77cc-446f-f2bf-0a663a565791"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "IBM_review.pptx  photo-1589820296156-2454bb8a6ad1.jpg  \u001b[0m\u001b[01;34mTRAIN_SET\u001b[0m/\n",
+            "nutrition.h5     \u001b[01;34mTEST_SET\u001b[0m/\n"
+          ]
+        }
+      ],
+      "source": [
+        "ls"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "whbZ5Uw35pHw"
+      },
+      "source": [
+        "### Importing Neccessary Libraries"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 7,
+      "metadata": {
+        "id": "60eg6zmo5pHx"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np#used for numerical analysis\n",
+        "import tensorflow #open source used for both ML and DL for computation\n",
+        "from tensorflow.keras.models import Sequential #it is a plain stack of layers\n",
+        "from tensorflow.keras import layers #A layer consists of a tensor-in tensor-out computation function\n",
+        "#Dense layer is the regular deeply connected neural network layer\n",
+        "from tensorflow.keras.layers import Dense,Flatten\n",
+        "#Faltten-used fot flattening the input or change the dimension\n",
+        "from tensorflow.keras.layers import Conv2D,MaxPooling2D,Dropout #Convolutional layer\n",
+        "#MaxPooling2D-for downsampling the image\n",
+        "from keras.preprocessing.image import ImageDataGenerator\n",
+        "\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "vnVt93M05pH0"
+      },
+      "source": [
+        "### Image Data Agumentation"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 8,
+      "metadata": {
+        "id": "-VLZKCTd5pH1"
+      },
+      "outputs": [],
+      "source": [
+        "#setting parameter for Image Data agumentation to the training data\n",
+        "train_datagen = ImageDataGenerator(rescale=1./255,shear_range=0.2,zoom_range=0.2,horizontal_flip=True)\n",
+        "#Image Data agumentation to the testing data\n",
+        "test_datagen=ImageDataGenerator(rescale=1./255)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "kpsHveuq5pH4"
+      },
+      "source": [
+        "### Loading our data and performing data agumentation"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 9,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8Hkc9ffd5pH5",
+        "outputId": "73190fdc-5efa-4e98-da62-43608b8f3789"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Found 4138 images belonging to 5 classes.\n",
+            "Found 929 images belonging to 3 classes.\n"
+          ]
+        }
+      ],
+      "source": [
+        "#performing data agumentation to train data\n",
+        "x_train = train_datagen.flow_from_directory(\n",
+        "    r'/content/drive/MyDrive/Colab Notebooks/Dataset/TRAIN_SET',\n",
+        "    target_size=(64, 64),batch_size=5,color_mode='rgb',class_mode='sparse')\n",
+        "#performing data agumentation to test data\n",
+        "x_test = test_datagen.flow_from_directory(\n",
+        "    r'/content/drive/MyDrive/Colab Notebooks/Dataset/TEST_SET',\n",
+        "    target_size=(64, 64),batch_size=5,color_mode='rgb',class_mode='sparse') "
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 10,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "szwYFmls5pH8",
+        "outputId": "1417851f-a22d-4ece-bbc3-187d4bc2c983"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "{'APPLES': 0, 'BANANA': 1, 'ORANGE': 2, 'PINEAPPLE': 3, 'WATERMELON': 4}\n"
+          ]
+        }
+      ],
+      "source": [
+        "print(x_train.class_indices)#checking the number of classes"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 11,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8SliKn605pH-",
+        "outputId": "f61827d5-169c-4a98-c19b-c99371659771"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "{'APPLES': 0, 'BANANA': 1, 'ORANGE': 2}\n"
+          ]
+        }
+      ],
+      "source": [
+        "print(x_test.class_indices)#checking the number of classes"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 12,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "yWWDoRDw5pIA",
+        "outputId": "377cccc4-ed6a-4c05-81f6-a891c172a922"
+      },
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Counter({0: 995, 1: 1374, 2: 1019, 3: 275, 4: 475})"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 12
+        }
+      ],
+      "source": [
+        "from collections import Counter as c\n",
+        "c(x_train .labels)"
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "collapsed_sections": [],
+      "provenance": []
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8.3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
