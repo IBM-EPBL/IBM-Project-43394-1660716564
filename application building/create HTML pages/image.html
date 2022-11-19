@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.container {
+  position: relative;
+  text-align: center;
+  color: black;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  color:white;
+  left: 16px;
+}
+
+.top-left {
+  position: absolute;
+  top: 8px;
+  color:white;
+  left: 16px;
+
+}
+
+
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color:white;
+  transform: translate(-50%, -50%);
+}
+</style>
+</head>
+<body>
+
+<h2>CLASSIFY AND ANALYZE THE FRUITS</h2>
+<div class="container">
+  <img src="image.jpg" alt="pic" style="width:75%;">
+  <div class="bottom-left">NUTRITION</div>
+  <div class="top-left"><i>WELCOME Move to the page center for uploading your image file. </i></div>
+  
+  <div class="centered">
+<h3>UPLOAD AN IMAGE TO BE CLASSIFIED:</h3>
+<form action="/action_page.php">
+  <label for="myfile">Select a file:</label>
+  <input type="file" id="myfile" name="myfile"><br><br>
+  <A HREF="imageprocess.html"><input type="submit"></a>
+</form>
+</div>
+</div>
+
+</body>
+</html>
